@@ -129,6 +129,10 @@ void render_history(const struct calc_state *const state) {
     werase(history_win);
     uint64_t idx = 0;
     for (uint64_t i = 0; num_render != 0 && i < num_render; i++) {
+        // do not render the past the end of the buffer
+        if (state->hist_pos + i >= MAX_HISTORY) {
+            break;
+        }
         idx = (state->hist_cnt - state->hist_pos - 1 - i) % MAX_HISTORY;
         mvwprintw(history_win, hist_height - i, 1, "%s",
                   state->history[idx]);
@@ -167,7 +171,7 @@ uint64_t up_hist(struct calc_state *const state, char *input, int *pos) {
     if (!state || !input) {
         return ENULL;
     }
-    if (state->hist_pos < MAX_HISTORY - 1 && state->hist_pos < state->hist_cnt) {
+    if (state->hist_pos < MAX_HISTORY && state->hist_pos < state->hist_cnt) {
         state->hist_pos++;
     }
     const uint64_t idx = (state->hist_cnt - state->hist_pos) % MAX_HISTORY;
