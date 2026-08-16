@@ -12,7 +12,7 @@ struct calc_state {
     char history[MAX_HISTORY][MAX_CHARS];
     uint16_t hist_cnt;
     uint16_t hist_head;
-    uint16_t hist_pos;
+    uint16_t hist_pos; // this is a offset from the head
     uint8_t width;
     uint8_t mode;
 };

@@ -122,14 +122,16 @@ void render_display(const struct calc_state *const state) {
 }
 
 void render_history(const struct calc_state *const state) {
-    werase(history_win);
     const uint64_t hist_height =
         max_y - DISPLAY_HEIGHT - INPUT_HEIGHT - STATUS_HEIGHT - 2;
     const uint64_t num_render =
         hist_height > state->hist_cnt ? state->hist_cnt : hist_height;
+    werase(history_win);
+    uint64_t idx = 0;
     for (uint64_t i = 0; num_render != 0 && i < num_render; i++) {
+        idx = (state->hist_cnt - state->hist_pos - 1 - i) % MAX_HISTORY;
         mvwprintw(history_win, hist_height - i, 1, "%s",
-                  state->history[(state->hist_cnt - 1 - i) % MAX_HISTORY]);
+                  state->history[idx]);
     }
     box(history_win, 0, 0);
     wrefresh(history_win);
@@ -141,6 +143,36 @@ uint64_t push_hist(struct calc_state *const state, const char *const input) {
     }
     const size_t size = strlen(input);
     memcpy(&state->history[state->hist_cnt++ % MAX_HISTORY], input, size);
+    if (state->hist_cnt >= MAX_HISTORY) {
+        state->hist_head = (state->hist_head + 1) % MAX_HISTORY;
+    }
+    state->hist_pos = 0;
+    return 0;
+}
+
+uint64_t down_hist(struct calc_state *const state, char *input, int *pos) {
+    if (!state || !input) {
+        return ENULL;
+    }
+    if (state->hist_pos != 0) {
+        --state->hist_pos;
+    }
+    const uint64_t idx = (state->hist_cnt - state->hist_pos) % MAX_HISTORY;
+    memcpy(input, state->history[idx], MAX_CHARS);
+    *pos = strlen(input);
+    return 0;
+}
+
+uint64_t up_hist(struct calc_state *const state, char *input, int *pos) {
+    if (!state || !input) {
+        return ENULL;
+    }
+    if (state->hist_pos < MAX_HISTORY - 1 && state->hist_pos < state->hist_cnt) {
+        state->hist_pos++;
+    }
+    const uint64_t idx = (state->hist_cnt - state->hist_pos) % MAX_HISTORY;
+    memcpy(input, state->history[idx], MAX_CHARS);
+    *pos = strlen(input);
     return 0;
 }
 
@@ -154,6 +186,7 @@ void render_registers(const struct calc_state *const state) {
     box(register_win, 0, 0);
     wrefresh(register_win);
 }
+
 void render_input(const char *const input) {
     werase(input_win);
     mvwprintw(input_win, 1, 1, "%s%s", INPUT_TEXT, input);

@@ -40,7 +40,13 @@ int main(void) {
             init_tui();
             render_tui(&state, input);
         } else if (ch == KEY_UP) {
+            up_hist(&state, input, &pos);
+            render_history(&state);
+            render_input(input);
         } else if (ch == KEY_DOWN) {
+            down_hist(&state, input, &pos);
+            render_history(&state);
+            render_input(input);
         }
     }
     end_tui();

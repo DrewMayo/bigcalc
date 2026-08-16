@@ -4,14 +4,14 @@
 #define ENULL -1
 #define EINVALID -2
 #define EFULL -3
-#define EMEM  -4
+#define EMEM -4
 
 // for checking the value that we are going
 // to discard later
-#define CHECK_ERROR_DISCARD(fn, expected)    \
+#define CHECK_ERROR_DISCARD(fn, expected) \
     do {                                  \
-        uint64_t __retval = (fn);                \
-        if (__retval != expected) {         \
+        uint64_t __retval = (fn);         \
+        if (__retval != expected) {       \
             goto error;                   \
         }                                 \
     } while (0)
@@ -25,11 +25,11 @@
         }                                 \
     } while (0)
 
-#define TEST(val)               \
-    do {                        \
-        if(!(val)) {            \
-            goto error;         \
-        }                       \
+#define TEST(val)       \
+    do {                \
+        if (!(val)) {   \
+            goto error; \
+        }               \
     } while (0)
 
 #endif

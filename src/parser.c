@@ -31,20 +31,29 @@ typedef struct ast_node *(*const infix_fn)(struct parser *, struct ast_node *);
 
 // function table for prefix (nud)
 static prefix_fn PREFIX_TABLE[NUM_TOKEN_TYPES] = {
-    [TOK_BIN_NUM] = parse_number, [TOK_OCT_NUM] = parse_number,
-    [TOK_DEC_NUM] = parse_number, [TOK_HEX_NUM] = parse_number,
-    [TOK_IDENT] = parse_number,   [TOK_NOT] = parse_unary,
+    [TOK_BIN_NUM] = parse_number,
+    [TOK_OCT_NUM] = parse_number,
+    [TOK_DEC_NUM] = parse_number,
+    [TOK_HEX_NUM] = parse_number,
+    [TOK_IDENT] = parse_number,
+    [TOK_NOT] = parse_unary,
     [TOK_LPAREN] = parse_group,
 };
 
 // function table for infix (led)
 static infix_fn INFIX_TABLE[NUM_TOKEN_TYPES] = {
-    [TOK_EQUAL] = parse_assign,     [TOK_AND] = parse_binary,
-    [TOK_OR] = parse_binary,        [TOK_XOR] = parse_binary,
-    [TOK_PLUS] = parse_binary,      [TOK_MINUS] = parse_binary,
-    [TOK_MUL] = parse_binary,       [TOK_DIV] = parse_binary,
-    [TOK_LSHIFT] = parse_binary,    [TOK_RSHIFT] = parse_binary,
-    [TOK_LESS_THAN] = parse_binary, [TOK_GREATER_THAN] = parse_binary,
+    [TOK_EQUAL] = parse_assign,
+    [TOK_AND] = parse_binary,
+    [TOK_OR] = parse_binary,
+    [TOK_XOR] = parse_binary,
+    [TOK_PLUS] = parse_binary,
+    [TOK_MINUS] = parse_binary,
+    [TOK_MUL] = parse_binary,
+    [TOK_DIV] = parse_binary,
+    [TOK_LSHIFT] = parse_binary,
+    [TOK_RSHIFT] = parse_binary,
+    [TOK_LESS_THAN] = parse_binary,
+    [TOK_GREATER_THAN] = parse_binary,
     [TOK_SLICE] = parse_slice,
 };
 
@@ -59,13 +68,7 @@ struct op_info {
 };
 // binding power (higher means tighter bindings)
 static const struct op_info BP_TABLE[NUM_TOKEN_TYPES] = {
-    [TOK_EQUAL] = {1, ASSOC_RIGHT},    [TOK_OR] = {2, ASSOC_LEFT},
-    [TOK_XOR] = {3, ASSOC_LEFT},       [TOK_AND] = {4, ASSOC_LEFT},
-    [TOK_LESS_THAN] = {5, ASSOC_LEFT}, [TOK_GREATER_THAN] = {5, ASSOC_LEFT},
-    [TOK_LSHIFT] = {6, ASSOC_LEFT},    [TOK_RSHIFT] = {6, ASSOC_LEFT},
-    [TOK_PLUS] = {7, ASSOC_LEFT},      [TOK_MINUS] = {7, ASSOC_LEFT},
-    [TOK_MUL] = {8, ASSOC_LEFT},       [TOK_DIV] = {8, ASSOC_LEFT},
-    [TOK_MOD] = {8, ASSOC_LEFT},       [TOK_SLICE] = {SLICE_BP, ASSOC_LEFT}};
+    [TOK_EQUAL] = {1, ASSOC_RIGHT}, [TOK_OR] = {2, ASSOC_LEFT}, [TOK_XOR] = {3, ASSOC_LEFT}, [TOK_AND] = {4, ASSOC_LEFT}, [TOK_LESS_THAN] = {5, ASSOC_LEFT}, [TOK_GREATER_THAN] = {5, ASSOC_LEFT}, [TOK_LSHIFT] = {6, ASSOC_LEFT}, [TOK_RSHIFT] = {6, ASSOC_LEFT}, [TOK_PLUS] = {7, ASSOC_LEFT}, [TOK_MINUS] = {7, ASSOC_LEFT}, [TOK_MUL] = {8, ASSOC_LEFT}, [TOK_DIV] = {8, ASSOC_LEFT}, [TOK_MOD] = {8, ASSOC_LEFT}, [TOK_SLICE] = {SLICE_BP, ASSOC_LEFT}};
 
 static uint64_t next_min_bp(enum token type) {
     const struct op_info *info = &BP_TABLE[type];

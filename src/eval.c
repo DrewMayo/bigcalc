@@ -15,7 +15,6 @@ static uint64_t op_mod(uint64_t l, uint64_t r) { return l % r; }
 static uint64_t op_and(uint64_t l, uint64_t r) { return l & r; }
 static uint64_t op_or(uint64_t l, uint64_t r) { return l | r; }
 static uint64_t op_xor(uint64_t l, uint64_t r) { return l ^ r; }
-
 static uint64_t op_less_than(uint64_t l, uint64_t r) { return l < r; }
 static uint64_t op_greater_than(uint64_t l, uint64_t r) { return l > r; }
 static uint64_t op_lshift(uint64_t l, uint64_t r) { return l << r; }
@@ -76,11 +75,9 @@ uint64_t eval_recurse(struct ast_node *node) {
             TEST(sscanf(slice->tok.value, "%lu:%lu", &hi, &lo) == 2);
             TEST(hi >= lo);
             uint64_t width = hi - lo + 1;
-            uint64_t mask =
-                (width >= 64) ? ~(uint64_t)0 : (((uint64_t)1 << width) - 1);
+            uint64_t mask = (width >= 64) ? ~(uint64_t)0 : (((uint64_t)1 << width) - 1);
             size_t reg = *slice->left->tok.value - 'a';
-            registers[reg] =
-                (registers[reg] & ~(mask << lo)) | ((val & mask) << lo);
+            registers[reg] = (registers[reg] & ~(mask << lo)) | ((val & mask) << lo);
             return val;
         }
         TEST(node->left->tok.type == TOK_IDENT);
@@ -95,8 +92,7 @@ uint64_t eval_recurse(struct ast_node *node) {
         TEST(sscanf(node->tok.value, "%lu:%lu", &hi, &lo) == 2);
         TEST(hi >= lo);
         uint64_t width = hi - lo + 1;
-        uint64_t mask =
-            (width >= 64) ? ~(uint64_t)0 : (((uint64_t)1 << width) - 1);
+        uint64_t mask = (width >= 64) ? ~(uint64_t)0 : (((uint64_t)1 << width) - 1);
         return (val >> lo) & mask;
     }
     if (!node->left && !node->right) {
