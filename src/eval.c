@@ -77,8 +77,9 @@ uint64_t eval_recurse(struct ast_node *node) {
             uint64_t width = hi - lo + 1;
             uint64_t mask = (width >= 64) ? ~(uint64_t)0 : (((uint64_t)1 << width) - 1);
             size_t reg = *slice->left->tok.value - 'a';
+            uint64_t sliced_val = ~(mask << lo) | ((val & mask) << lo);
             registers[reg] = (registers[reg] & ~(mask << lo)) | ((val & mask) << lo);
-            return val;
+            return sliced_val;
         }
         TEST(node->left->tok.type == TOK_IDENT);
         registers[*node->left->tok.value - 'a'] = val;

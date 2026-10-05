@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define CTRL(x) ((x) & 0x1f)
+
 int main(void) {
     init_tui();
     char input[MAX_CHARS] = {0};
@@ -47,6 +49,8 @@ int main(void) {
             down_hist(&state, input, &pos);
             render_history(&state);
             render_input(input);
+        } else if (ch == CTRL('j')) {
+            exit(EXIT_SUCCESS);
         }
     }
     end_tui();

@@ -200,7 +200,7 @@ void render_input(const char *const input) {
 
 void render_status(const struct calc_state *const state) {
     werase(status_win);
-    wprintw(status_win, "Width: %d Bit\t Mode: 2s complement", state->width);
+    wprintw(status_win, "Width: %d Bit\t", state->width);
     wrefresh(status_win);
 }
 
